@@ -1,127 +1,133 @@
-import React, { useEffect, useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   Text,
   View,
   StyleSheet,
   Pressable,
   Image,
-  FlatList,
-  TextInput
+  FlatList
 } from "react-native";
 
-const OrderDetails = () => {
-  const [productList, setProductList] = useState([]);
-  const [promoCode, setPromoCode] = useState("");
-  const [cardNumber, setCardNumber] = useState("");
+const OrdersInProgress = () => {
+  const [selectecTab, setSelectedTab] = useState(0);
+  const [orders, setOrders] = useState([]);
   useEffect(() => {
-    setProductList([
+    setOrders([
       {
         id: 1,
-        name: "Product name",
-        price: 12.59,
-        discountedPrice: 10,
-        deliveryType: "Free delivery",
-        rating: 4.8,
-        image: require("./assets/productImage.png")
+        customer: "Customer name",
+        orderNumber: "546589",
+        location: "Street name, City, State, Zip",
+        time: "12:00 PM",
+        status: "in-progress",
+        paymentOption: "Cash on Delivery",
+        totalPrice: 14,
+        image: require("./assets/orderImage.png"),
+        date: "05/07/22"
+      },
+      {
+        id: 2,
+        customer: "Customer name",
+        orderNumber: "546589",
+        location: "Street name, City, State, Zip",
+        time: "12:00 PM",
+        status: "in-progress",
+        paymentOption: "Cash on Delivery",
+        totalPrice: 14,
+        image: require("./assets/orderImage.png"),
+        date: "05/07/22"
+      },
+      {
+        id: 3,
+        customer: "Customer name",
+        orderNumber: "546589",
+        location: "Street name, City, State, Zip",
+        time: "12:00 PM",
+        status: "in-progress",
+        paymentOption: "Cash on Delivery",
+        totalPrice: 14,
+        image: require("./assets/orderImage.png"),
+        date: "05/07/22"
+      },
+      {
+        id: 4,
+        customer: "Customer name",
+        orderNumber: "546589",
+        location: "Street name, City, State, Zip",
+        time: "12:00 PM",
+        status: "in-progress",
+        paymentOption: "Cash on Delivery",
+        totalPrice: 14,
+        image: require("./assets/orderImage.png"),
+        date: "05/07/22"
       }
     ]);
   }, []);
   return (
     <View style={styles.container}>
       <FlatList
-        style={styles.list}
+        showsVerticalScrollIndicator={false}
         ListHeaderComponent={() => (
-          <View>
-            <View style={styles.flexRow}>
-              <Text style={styles.fnt16}>Deliver to</Text>
-              <Pressable>
-                <Text style={styles.fnt16}>Edit</Text>
-              </Pressable>
-            </View>
-            <View style={styles.separator} />
-            <View style={styles.tile}>
-              <View style={styles.flexRow}>
-                <Image
-                  source={require("./assets/locationIcon.png")}
-                  style={styles.icon}
-                />
-                <Text style={styles.deliveryAddress}>1234 Street, City</Text>
-                <Image
-                  source={require("./assets/searchIcon.png")}
-                  style={styles.icon}
-                />
-              </View>
-            </View>
-            <View style={styles.separator} />
-            <View style={styles.tile}>
-              <View style={styles.flexRow}>
-                <Text style={styles.fnt16}>Your Order</Text>
-                <Text style={[styles.fnt16, styles.green]}>Add Items</Text>
-              </View>
-            </View>
-            <View style={styles.separator} />
-          </View>
+          <TabView
+            tabTitles={["In Progress", "Completed"]}
+            selected={selectecTab}
+            onPress={setSelectedTab}
+            style={styles.tabView}
+          />
         )}
-        data={productList}
+        data={orders}
         keyExtractor={item => item.id.toString()}
         renderItem={({ item }) => (
           <View style={styles.productContainer}>
-            <Image source={item.image} style={styles.productImage} />
-            <View style={styles.productDetails}>
-              <Text style={styles.productName}>{item.name}</Text>
-              <Text style={styles.pricingText}>
-                ${item.discountedPrice.toFixed(2)}{" "}
-                <Text style={styles.lineThrough}>${item.price.toFixed(2)}</Text>
-              </Text>
-              <View style={styles.deliveryContainer}>
-                <View style={styles.greenCircle}>
-                  <Text style={[styles.white, styles.bold]}>%</Text>
-                </View>
-                <Text style={styles.fnt12}>Free delivery</Text>
+            <View style={styles.productHeader}>
+              <Image source={item.image} style={styles.productImage} />
+              <View style={styles.productInfo}>
+                <Text style={styles.mainText}>{item.customer}</Text>
+                <Text style={styles.subText}>#{item.orderNumber}</Text>
               </View>
+              <Pressable
+                style={[
+                  styles.statusBtn,
+                  item.status === "in-progress" ? null : styles.green
+                ]}>
+                <Image
+                  source={
+                    item.status === "in-progress"
+                      ? require("./assets/plusIcon.png")
+                      : require("./assets/doubleTickIcon.png")
+                  }
+                  style={styles.plusIcon}
+                />
+                <Text style={styles.statusText}>
+                  {item.status === "in-progress" ? "Accept" : "Delivered"}
+                </Text>
+              </Pressable>
             </View>
-            <Pressable>
-              <Text style={styles.editText}>Edit</Text>
-            </Pressable>
-          </View>
-        )}
-        ListFooterComponent={() => (
-          <View style={styles.footer}>
-            <View style={styles.separator} />
-            <View style={styles.tile}>
-              <Input
-                text="Promo code"
-                value={promoCode}
-                onChange={text => setPromoCode(text)}
-                containerStyle={styles.inputContainer}
+            <View style={styles.flexRow}>
+              <Image
+                source={require("./assets/locationIcon.png")}
+                style={styles.icon}
               />
-              <Input
-                text="Card number"
-                value={cardNumber}
-                onChange={text => setCardNumber(text)}
-                containerStyle={styles.inputContainer}
-                icon={require("./assets/arrowIcon.png")}
-                placeholder="xxxx-xxxx-xxxx-xxxx"
+              <Text style={styles.text}>{item.location}</Text>
+            </View>
+            <View style={styles.flexRow}>
+              <Image
+                source={require("./assets/clockIcon.png")}
+                style={styles.icon}
               />
-              <View style={styles.detailsContainer}>
-                <View style={styles.flexRow}>
-                  <Text style={styles.subText}>Promo code</Text>
-                  <Text>$0</Text>
-                </View>
-                <View style={styles.flexRow}>
-                  <Text style={styles.subText}>Delivery Fee</Text>
-                  <Text>$0</Text>
-                </View>
-                <View style={styles.flexRow}>
-                  <Text style={styles.subText}>Product Price</Text>
-                  <Text>$10.00</Text>
-                </View>
-                <View style={styles.flexRow}>
-                  <Text style={styles.subText}>Total Price</Text>
-                  <Text>$10.00</Text>
-                </View>
-              </View>
-              <Button buttonText="Place order" style={styles.button} />
+              <Text style={styles.text}>
+                Ordered: {item.time} {item.date}
+              </Text>
+            </View>
+            <View style={styles.flexRow}>
+              <Image
+                source={require("./assets/walletIcon.png")}
+                style={styles.icon}
+              />
+              <Text style={styles.text}>{item.paymentOption}</Text>
+              <Text style={styles.pricingText}>
+                ${item.totalPrice.toFixed(2)}
+              </Text>
             </View>
           </View>
         )}
@@ -132,265 +138,189 @@ const OrderDetails = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#f1f1f1",
-    paddingTop: 20
+    backgroundColor: "#fff"
   },
-  separator: {
-    height: 20,
-    width: "100%",
-    backgroundColor: "#f1f1f1"
+  tabView: {
+    width: "70%",
+    marginHorizontal: 20,
+    marginBottom: 20
   },
-  flexRow: {
+  productContainer: {
+    backgroundColor: "#fff",
+    paddingHorizontal: 20,
+    paddingVertical: 10,
+    elevation: 10,
+    shadowColor: "rgba(0,0,0,0.5)",
+    shadowOffset: {
+      width: 0,
+      height: 2
+    },
+    shadowRadius: 10,
+    shadowOpacity: 0.3,
+    marginBottom: 20
+  },
+  productHeader: {
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
-    paddingHorizontal: 20
-  },
-  tile: {
-    backgroundColor: "#fff",
-    paddingVertical: 10
-  },
-  fnt16: {
-    fontSize: 16
-  },
-  icon: {
-    width: 30,
-    height: 30,
-    resizeMode: "contain"
-  },
-  deliveryAddress: {
-    fontSize: 16,
-    color: "#22292E",
-    flex: 1,
-    marginLeft: 10
-  },
-  green: {
-    color: "#12D790"
-  },
-  productContainer: {
-    flexDirection: "row",
-    paddingHorizontal: 20,
-    paddingVertical: 10,
-    backgroundColor: "#fff"
+    borderBottomColor: "#E0E0E0",
+    paddingBottom: 10,
+    borderBottomWidth: 1
   },
   productImage: {
-    height: 80,
-    width: 70,
-    borderRadius: 10
+    width: 60,
+    height: 60,
+    borderRadius: 30
   },
-  productDetails: {
+  productInfo: {
     flex: 1,
-    marginLeft: 20
+    justifyContent: "space-around",
+    marginLeft: 20,
+    height: 60
   },
-  productName: {
+  mainText: {
     fontSize: 16,
-    color: "#000",
-    fontWeight: "bold",
-    marginBottom: 5
-  },
-  pricingText: {
-    fontSize: 14,
-    color: "#7E7E7E",
-    marginBottom: 5
-  },
-  lineThrough: {
-    textDecorationLine: "line-through",
-    color: "#ccc",
-    textDecorationStyle: "solid"
-  },
-  deliveryContainer: {
-    flexDirection: "row",
-    alignItems: "center",
-    marginVertical: 5
-  },
-  greenCircle: {
-    width: 20,
-    height: 20,
-    borderRadius: 10,
-    backgroundColor: "#12D790",
-    justifyContent: "center",
-    alignItems: "center",
-    marginRight: 5
-  },
-  white: {
-    color: "#fff"
-  },
-  fnt12: {
-    fontSize: 12
-  },
-  bold: {
+    color: "#3E4462",
     fontWeight: "bold"
   },
-  editText: {
-    fontSize: 16,
-    color: "#EA4335",
-    marginRight: 10
-  },
-  inputContainer: {
-    marginHorizontal: 20
-  },
-  detailsContainer: {
-    marginTop: 20
-  },
   subText: {
-    color: "#8A8A8E"
+    fontSize: 16,
+    color: "#7C7C7C"
   },
-  button: {
-    marginHorizontal: 40,
-    flex: 1,
-    marginTop: 30,
-    marginBottom: 20
+  statusBtn: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
+    width: 100,
+    height: 40,
+    borderRadius: 10,
+    backgroundColor: "#E84C4F"
   },
-  footer: {
-    backgroundColor: "#fff",
+  green: {
+    backgroundColor: "#12D790"
+  },
+  statusText: {
+    color: "#fff",
+    fontSize: 12
+  },
+  plusIcon: {
+    width: 10,
+    height: 10,
+    marginRight: 5
+  },
+  flexRow: {
+    flexDirection: "row",
+    justifyContent: "flex-start",
+    alignItems: "center",
+    marginTop: 10
+  },
+  icon: {
+    width: 20,
+    height: 20,
+    marginRight: 10,
+    resizeMode: "contain"
+  },
+  text: {
+    color: "#3E4462",
+    fontSize: 14
+  },
+  pricingText: {
+    color: "#000",
+    fontSize: 24,
+    textAlign: "right",
     flex: 1
   }
 });
 
-export default OrderDetails;
+export default OrdersInProgress;
 
-const Input = props => {
-  return (
-    <View style={[inputStyles.inputContainer, props.containerStyle]}>
-      {props.text
-        ? (
-        <Text style={inputStyles.inputText}>{props.text}</Text>
-          )
-        : null}
-
-      <TextInput
-        style={[
-          inputStyles.input,
-          props.style,
-          props.textArea ? inputStyles.textArea : null
-        ]}
-        placeholder={props.placeholder ? props.placeholder : "Enter"}
-        value={props.value}
-        onChangeText={props.onChange()}
-        placeholderTextColor={
-          props.placeholderTextColor ? props.placeholderTextColor : "#9B9B9B"
-        }
-        editable={props.editable !== false}
-        autoCapitalize="none"
-        autoCorrect={false}
-        multiline={!!props.textArea}
-      />
-      {props.errorText
-        ? (
-        <Text style={inputStyles.error}>{props.errorText}</Text>
-          )
-        : null}
-      {props.icon
-        ? (
-        <Image
-          source={props.icon}
-          style={
-            props.text ? inputStyles.iconWithText : inputStyles.iconWithoutText
-          }
-        />
-          )
-        : null}
-      <View style={styles.children}>{props.children}</View>
-    </View>
-  );
-};
-
-const inputStyles = StyleSheet.create({
-  inputContainer: {
-    flexDirection: "column",
-    justifyContent: "center"
-  },
-  inputText: {
-    fontSize: 14,
-    marginLeft: 20,
-    color: "#111112"
-  },
-  input: {
-    borderWidth: 1,
-    borderColor: "#e6e6e6",
-    borderRadius: 10,
-    padding: 10,
-    paddingLeft: 20,
-    marginVertical: 10,
-    width: "100%",
-    height: 50,
-    color: "#000"
-  },
-  iconWithText: {
-    position: "absolute",
-    right: 30,
-    top: 48,
-    width: 15,
-    height: 15,
-    resizeMode: "contain"
-  },
-  iconWithoutText: {
-    position: "absolute",
-    right: 30,
-    top: 28,
-    width: 15,
-    height: 15,
-    resizeMode: "contain"
-  },
-  textArea: {
-    height: 150
-  },
-  children: {}
-});
-const Button = params => {
-  const backgroundColor = params.color || "#000";
-  const textColor = params.textColor || "#fff";
-  const btnStyle = {
-    backgroundColor: backgroundColor,
-    borderColor: params.outlineColor || backgroundColor,
-    borderWidth: 1
+const TabView = ({
+  tabTitles,
+  selected,
+  onPress,
+  tabColor,
+  backgroundColor,
+  style,
+  icons
+}) => {
+  const tabColorStyle = {
+    backgroundColor: tabColor || "#fff"
   };
-  const btnText = {
-    color: textColor
+  const backgroundColorStyle = {
+    backgroundColor: backgroundColor || "#F1F1F1"
   };
+  const propStyle = style || {};
   return (
-    <View style={[buttonStyles.btnContainer, params.style]}>
-      <View style={!params.hideShadow ? buttonStyles.shadowContainer : null}>
+    <View
+      style={[tabViewStyles.paletteContainer, backgroundColorStyle, propStyle]}>
+      {tabTitles.map((title, index) => (
         <Pressable
-          style={[buttonStyles.btn, btnStyle]}
-          onPress={params.onPress}>
-          <Text style={[buttonStyles.btnText, btnText]}>
-            {params.buttonText}
-          </Text>
-          <View style={styles.childrenContainer}>{params.children}</View>
+          onPress={() => (onPress ? onPress(index) : null)}
+          style={
+            index === selected
+              ? [tabViewStyles.selected, tabColorStyle, tabViewStyles.tabItem]
+              : [
+                  tabViewStyles.unSelected,
+                  backgroundColorStyle,
+                  tabViewStyles.tabItem
+                ]
+          }
+          key={index}>
+          {icons
+            ? (
+            <Image
+              source={icons[index]}
+              style={[
+                tabViewStyles.icon,
+                index === selected
+                  ? tabViewStyles.selectedIcon
+                  : tabViewStyles.unSelectedIcon
+              ]}
+            />
+              )
+            : null}
+          <Text>{title}</Text>
         </Pressable>
-      </View>
+      ))}
     </View>
   );
 };
 
-const buttonStyles = StyleSheet.create({
-  btnContainer: {
-    justifyContent: "center"
-  },
-  shadowContainer: {
-    shadowColor: "rgba(0, 0, 0, 0.5)",
-    elevation: 10,
-    backgroundColor: "#fff",
-    borderRadius: 10
-  },
-  btn: {
-    height: 50,
-    padding: 10,
-    paddingHorizontal: 25,
+const tabViewStyles = StyleSheet.create({
+  paletteContainer: {
+    height: 48,
+    backgroundColor: "#E4E4E4",
+    flexDirection: "row",
+    alignItems: "center",
     borderRadius: 10,
+    padding: 6,
+    marginVertical: 10
+  },
+  tabItem: {
+    borderRadius: 10,
+    flex: 1,
+    height: "100%",
     justifyContent: "center",
     alignItems: "center",
-
     flexDirection: "row"
   },
-  btnText: {
-    color: "#fff",
-    fontSize: 16,
-    fontWeight: "bold"
+  selected: {
+    shadowColor: "gray",
+    elevation: 10
   },
-  childrenContainer: {
-    justifyContent: "center",
-    alignItems: "center"
+  unSelected: {
+    backgroundColor: "#f1f1f1"
+  },
+  icon: {
+    width: 20,
+    height: 20,
+    resizeMode: "contain",
+    marginRight: 5
+  },
+  selectedIcon: {
+    tintColor: "#000"
+  },
+  unSelectedIcon: {
+    tintColor: "#7C7C7C"
   }
 });
